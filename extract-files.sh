@@ -97,6 +97,10 @@ function blob_fixup() {
             [ "$2" = "" ] && return 0
             "${SIGSCAN}" -p "23 0A 00 94" -P "1F 20 03 D5" -f "${2}"
             ;;
+        vendor/lib/libgui1_vendor.so)
+            [ "$2" = "" ] && return 0
+            "${PATCHELF}" --replace-needed "libui.so" "libui-v30.so" "${2}"
+            ;;
         *)
             return 1
             ;;
