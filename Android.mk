@@ -36,5 +36,14 @@ $(ACDBDATA_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 	@mkdir -p $@
 	$(hide) ln -sf /vendor/etc/acdbdata/adsp_avs_config.acdb $@/adsp_avs_config.acdb
 
-ALL_DEFAULT_INSTALLED_MODULES +=  $(ACDBDATA_SYMLINKS)
+CAMERA_COMPONENTS_SYMLINKS := $(TARGET_OUT_VENDOR)/lib64
+$(CAMERA_COMPONENTS_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
+	@echo "Creating camera components symlinks: $@"
+	@mkdir -p $@
+	@mkdir -p $@/camera/components
+	$(hide) ln -sf /odm/lib64/camera/components/com.qti.stats.pdlib.so $@/camera/components/com.qti.stats.pdlib.so
+	$(hide) ln -sf /odm/lib64/camera/components/com.qti.stats.haf.so $@/camera/components/com.qti.stats.haf.so
+	$(hide) ln -sf /odm/lib64/camera/components/libipebpsstriping.so $@/libipebpsstriping.so
+
+ALL_DEFAULT_INSTALLED_MODULES += $(ACDBDATA_SYMLINKS) $(CAMERA_COMPONENTS_SYMLINKS)
 endif
