@@ -63,18 +63,6 @@ function blob_fixup() {
             [ "$2" = "" ] && return 0
             grep -q libshims_fingerprint.oplus.so "${2}" || "${PATCHELF}" --add-needed libshims_fingerprint.oplus.so "${2}"
             ;;
-        odm/etc/init/wlchgmonitor.rc)
-            [ "$2" = "" ] && return 0
-            sed -i "/disabled/d;/seclabel/d" "${2}"
-            ;;
-        odm/etc/vintf/manifest/manifest_oplus_fingerprint.xml)
-            [ "$2" = "" ] && return 0
-            sed -ni "/android.hardware.biometrics.fingerprint/{x;s/hal format/hal override=\"true\" format/;x};x;1!p;\${x;p}" "${2}"
-            ;;
-        odm/lib64/libpwirissoft.so)
-            [ "$2" = "" ] && return 0
-            "${SIGSCAN}" -p "72 1F 00 94" -P "1F 20 03 D5" -f "${2}"
-            ;;
         product/app/PowerOffAlarm/PowerOffAlarm.apk)
             [ "$2" = "" ] && return 0
             apktool_patch "${2}" "${MY_DIR}/blob-patches/PowerOffAlarm.patch" -s
@@ -100,19 +88,10 @@ function blob_fixup() {
             sed -i "/NXPLOG_\w\+_LOGLEVEL/ s/0x03/0x02/" "${2}"
             sed -i "s/NFC_DEBUG_ENABLED=1/NFC_DEBUG_ENABLED=0/" "${2}"
             ;;
-        vendor/etc/msm_irqbalance.conf)
-            [ "$2" = "" ] && return 0
-            sed -i "s/IGNORED_IRQ=27,23,38$/&,115,332/" "${2}"
-            ;;
         vendor/lib64/hw/com.qti.chi.override.so)
             [ "$2" = "" ] && return 0
             grep -q libcamera_metadata_shim.so "${2}" || "${PATCHELF}" --add-needed libcamera_metadata_shim.so "${2}"
             sed -i "s/com.oem.autotest/\x00om.oem.autotest/" "${2}"
-            ;;
-        vendor/lib64/sensors.ssc.so)
-            [ "$2" = "" ] && return 0
-            sed -i "s/qti.sensor.wise_light/android.sensor.light\x00/" "${2}"
-            "${SIGSCAN}" -p "F1 E9 D3 84 52 49 3F A0 72" -P "F1 A9 00 80 52 09 00 A0 72" -f "${2}"
             ;;
         vendor/lib64/vendor.qti.hardware.camera.postproc@1.0-service-impl.so)
             [ "$2" = "" ] && return 0
